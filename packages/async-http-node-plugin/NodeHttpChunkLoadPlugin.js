@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
 const StartupChunkDependenciesPlugin = require("webpack/lib/runtime/StartupChunkDependenciesPlugin");
 const HttpChunkLoadingRuntimeModule = require("./HttpChunkLoadingRuntimeModule");
+const NodeLoadScriptRuntimeModule = require("./NodeLoadScriptRuntimeModule");
 
 /** @typedef {import("../Compiler")} Compiler */
 
@@ -19,6 +20,31 @@ class NodeHttpChunkLoadingPlugin {
    * @returns {void}
    */
   apply(compiler) {
+    // compiler.hooks.compile.tap(
+    //   "NodeHttpChunkLoadingPlugin",
+    //   ({ normalModuleFactory }) => {
+    //     new NodeExternalModuleFactoryPlugin(this.type, this.externals).apply(
+    //       normalModuleFactory
+    //     );
+    //   }
+    // );
+
+    compiler.hooks.compilation.tap(
+      "NodeHttpChunkLoadingPlugin",
+      (compilation) => {
+        // Adds an alternative loadScript runtime module
+        compilation.hooks.runtimeRequirementInTree
+          .for(RuntimeGlobals.loadScript)
+          .tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
+            compilation.addRuntimeModule(
+              chunk,
+              new NodeLoadScriptRuntimeModule()
+            );
+            return true;
+          });
+      }
+    );
+
     webpack.javascript.EnableChunkLoadingPlugin.setEnabled(
       compiler,
       "async-http-node"
@@ -29,6 +55,7 @@ class NodeHttpChunkLoadingPlugin {
       chunkLoading: chunkLoadingValue,
       asyncChunkLoading: this._asyncChunkLoading,
     }).apply(compiler);
+
     compiler.hooks.thisCompilation.tap(
       "NodeHttpChunkLoadingPlugin",
       (compilation) => {

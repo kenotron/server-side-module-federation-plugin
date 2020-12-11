@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const NodeHttpChunkLoadingPlugin = require("async-");
+const NodeHttpChunkLoadingPlugin = require("async-http-node-plugin");
 module.exports = {
   optimization: { minimize: false },
   module: {
