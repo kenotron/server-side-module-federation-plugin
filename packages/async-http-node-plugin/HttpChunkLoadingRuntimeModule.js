@@ -18,6 +18,8 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
   constructor(runtimeRequirements) {
     super("http chunk loading", 10);
     this.runtimeRequirements = runtimeRequirements;
+
+    this.baseUrl = "http://localhost:8080/";
   }
 
   /**
@@ -102,8 +104,8 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
       "",
       withLoading
         ? Template.asString([
-            "// ReadFile + VM.run chunk loading for javascript",
-            `${fn}.readFileVm = function(chunkId, promises) {`,
+            "// http request + VM.run chunk loading for javascript",
+            `${fn}.httpVm = function(chunkId, promises) {`,
             hasJsMatcher !== false
               ? Template.indent([
                   "",
@@ -128,13 +130,26 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
                           )} + ${
                             RuntimeGlobals.getChunkScriptFilename
                           }(chunkId));`,
-                          "require('fs').readFile(filename, 'utf-8', function(err, content) {",
+                          `var url = "${this.baseUrl}" + filename.replace(/^\.\\//,"");`,
+                          "require('http').get(url, 'utf-8', function(res) {",
                           Template.indent([
-                            "if(err) return reject(err);",
-                            "var chunk = {};",
-                            "require('vm').runInThisContext('(function(exports, require, __dirname, __filename) {' + content + '\\n})', filename)" +
-                              "(chunk, require, require('path').dirname(filename), filename);",
-                            "installChunk(chunk);",
+                            "var statusCode = res.statusCode;",
+                            `res.setEncoding('utf8');`,
+                            `let content = '';`,
+                            `if (statusCode !== 200) {`,
+                            Template.indent([
+                              `return reject(new Error('Request Failed. Status Code: ' + statusCode));`,
+                            ]),
+                            `}`,
+                            `res.on('data', (c) => { content += c; });`,
+                            `res.on('end', () => {`,
+                            Template.indent([
+                              "var chunk = {};",
+                              "require('vm').runInThisContext('(function(exports, require, __dirname, __filename) {' + content + '\\n})', filename)" +
+                                "(chunk, require, require('path').dirname(filename), filename);",
+                              "installChunk(chunk);",
+                            ]),
+                            `});`,
                           ]),
                           "});",
                         ]),
@@ -159,7 +174,7 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
           ])
         : "// no external install chunk",
       "",
-      withHmr
+      false // withHmr
         ? Template.asString([
             "function loadUpdateChunk(chunkId, updatedModulesList) {",
             Template.indent([
@@ -198,7 +213,7 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
             Template.getFunctionContent(
               require("../hmr/JavascriptHotModuleReplacement.runtime.js")
             )
-              .replace(/\$key\$/g, "readFileVm")
+              .replace(/\$key\$/g, "httpVm")
               .replace(/\$installedChunks\$/g, "installedChunks")
               .replace(/\$loadUpdateChunk\$/g, "loadUpdateChunk")
               .replace(/\$moduleCache\$/g, RuntimeGlobals.moduleCache)
@@ -220,7 +235,7 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
           ])
         : "// no HMR",
       "",
-      withHmrManifest
+      false // withHmrManifest
         ? Template.asString([
             `${RuntimeGlobals.hmrDownloadManifest} = function() {`,
             Template.indent([

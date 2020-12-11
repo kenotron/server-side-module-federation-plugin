@@ -5,5 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack"
+  },
+  "devDependencies": {
+    "async-http-node-plugin": "*"
   }
 }
