@@ -1,3 +1,3 @@
-export default function shared() {
-  return 'merry christmas!'
+export default async function shared() {
+  return (await import("./message")).default;
 }
