@@ -49,22 +49,12 @@ class NodeHttpChunkLoadingPlugin {
 
     compiler.hooks.compile.tap("NodeHttpChunkLoadingPlugin", ({ normalModuleFactory }) => {
       normalModuleFactory.hooks.factorize.tapAsync("NodeHttpChunkLoadingPlugin", (data, callback) => {
-        const context = data.context;
         const dependency = data.dependencies[0];
-
         if (Object.prototype.hasOwnProperty.call(remoteExternals, dependency.request)) {
           callback(null, new NodeHttpExternalModule(remoteExternals[dependency.request], "promise", dependency.request));
         } else {
           callback();
         }
-      });
-    });
-
-    compiler.hooks.compilation.tap("NodeHttpChunkLoadingPlugin", (compilation) => {
-      // Adds an alternative loadScript runtime module
-      compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.loadScript).tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
-        compilation.addRuntimeModule(chunk, new NodeLoadScriptRuntimeModule());
-        return true;
       });
     });
 

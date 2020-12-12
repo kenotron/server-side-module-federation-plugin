@@ -14,6 +14,7 @@ const StaticExportsDependency = require("webpack/lib/dependencies/StaticExportsD
 const extractUrlAndGlobal = require("webpack/lib/util/extractUrlAndGlobal");
 const makeSerializable = require("webpack/lib/util/makeSerializable");
 const propertyAccess = require("webpack/lib/util/propertyAccess");
+const path = require("path");
 
 /** @typedef {import("webpack-sources").Source} Source */
 /** @typedef {import("../declarations/WebpackOptions").WebpackOptionsNormalized} WebpackOptions */
@@ -46,12 +47,10 @@ const propertyAccess = require("webpack/lib/util/propertyAccess");
  * @param {RuntimeTemplate} runtimeTemplate the runtime template
  * @returns {SourceData} the generated source
  */
-const getSource = (urlAndGlobal, runtimeTemplate) => {
-  console.log(urlAndGlobal);
-
+const getSource = (url, runtimeTemplate) => {
   return `new Promise(${runtimeTemplate.basicFunction("resolve, reject", [
-    `         var filename = "app2.js";`,
-    `         var url = "http://localhost:8080/" + filename.replace(/^.\\//, "");`,
+    `         var filename = ${path.basename(url)};`,
+    `         var url = "${url}"`,
     `         require("http").get(url, "utf-8", function (res) {`,
     `           var statusCode = res.statusCode;`,
     `           res.setEncoding("utf8");`,
@@ -197,15 +196,9 @@ class NodeHttpExternalModule extends Module {
   }
 
   getSourceData(runtimeTemplate, moduleGraph, chunkGraph) {
-    let request = typeof this.request === "object" && !Array.isArray(this.request) ? this.request[this.externalType] : this.request;
-
-    if (!Array.isArray(request)) {
-      // make it an array as the look up works the same basically
-      request = [request];
-    }
     return {
       init: "var error = new Error();",
-      expression: getSource(request, runtimeTemplate),
+      expression: getSource(this.request, runtimeTemplate),
     };
   }
 

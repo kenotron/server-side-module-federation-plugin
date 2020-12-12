@@ -2,7 +2,7 @@ const webpack = require("webpack");
 const NodeHttpChunkLoadingPlugin = require("../async-http-node-plugin/NodeHttpChunkLoadPlugin");
 
 const remotes = {
-  app2: "app2@http://localhost:8080/app2.js",
+  app2: "http://localhost:8080/app2.js",
 };
 
 module.exports = {
