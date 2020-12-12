@@ -4,7 +4,10 @@ const webpack = require("webpack");
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
 const StartupChunkDependenciesPlugin = require("webpack/lib/runtime/StartupChunkDependenciesPlugin");
 const HttpChunkLoadingRuntimeModule = require("./HttpChunkLoadingRuntimeModule");
-const NodeLoadScriptRuntimeModule = require("./NodeLoadScriptRuntimeModule");
+const NodeLoadScriptRuntimeModule = require("./NodeHttpExternalModule");
+const NodeHttpExternalModule = require("./NodeHttpExternalModule");
+
+const { parseOptions } = require("webpack/lib/container/options");
 
 /** @typedef {import("../Compiler")} Compiler */
 
@@ -12,6 +15,17 @@ class NodeHttpChunkLoadingPlugin {
   constructor(options) {
     options = options || {};
     this._asyncChunkLoading = options.asyncChunkLoading;
+    this._remotes = parseOptions(
+      options.remotes,
+      (item) => ({
+        external: Array.isArray(item) ? item : [item],
+        shareScope: options.shareScope || "default",
+      }),
+      (item) => ({
+        external: Array.isArray(item.external) ? item.external : [item.external],
+        shareScope: item.shareScope || options.shareScope || "default",
+      })
+    );
   }
 
   /**
@@ -20,14 +34,31 @@ class NodeHttpChunkLoadingPlugin {
    * @returns {void}
    */
   apply(compiler) {
-    // compiler.hooks.compile.tap(
-    //   "NodeHttpChunkLoadingPlugin",
-    //   ({ normalModuleFactory }) => {
-    //     new NodeExternalModuleFactoryPlugin(this.type, this.externals).apply(
-    //       normalModuleFactory
-    //     );
-    //   }
-    // );
+    const { _remotes: remotes, _remoteType: remoteType } = this;
+
+    /** @type {Record<string, string>} */
+    const remoteExternals = {};
+    for (const [key, config] of remotes) {
+      let i = 0;
+      for (const external of config.external) {
+        if (external.startsWith("internal ")) continue;
+        remoteExternals[`webpack/container/reference/${key}${i ? `/fallback-${i}` : ""}`] = external;
+        i++;
+      }
+    }
+
+    compiler.hooks.compile.tap("NodeHttpChunkLoadingPlugin", ({ normalModuleFactory }) => {
+      normalModuleFactory.hooks.factorize.tapAsync("NodeHttpChunkLoadingPlugin", (data, callback) => {
+        const context = data.context;
+        const dependency = data.dependencies[0];
+
+        if (Object.prototype.hasOwnProperty.call(remoteExternals, dependency.request)) {
+          callback(null, new NodeHttpExternalModule("Promise.resolve()", "promise", dependency.request));
+        } else {
+          callback();
+        }
+      });
+    });
 
     compiler.hooks.compilation.tap("NodeHttpChunkLoadingPlugin", (compilation) => {
       // Adds an alternative loadScript runtime module
