@@ -53,7 +53,7 @@ class NodeHttpChunkLoadingPlugin {
         const dependency = data.dependencies[0];
 
         if (Object.prototype.hasOwnProperty.call(remoteExternals, dependency.request)) {
-          callback(null, new NodeHttpExternalModule("Promise.resolve()", "promise", dependency.request));
+          callback(null, new NodeHttpExternalModule(remoteExternals[dependency.request], "promise", dependency.request));
         } else {
           callback();
         }
@@ -108,17 +108,6 @@ class NodeHttpChunkLoadingPlugin {
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.ensureChunkHandlers).tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
         if (!isEnabledForChunk(chunk)) return;
         set.add(RuntimeGlobals.getChunkScriptFilename);
-      });
-      compilation.hooks.runtimeRequirementInTree
-        .for(RuntimeGlobals.hmrDownloadUpdateHandlers)
-        .tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
-          if (!isEnabledForChunk(chunk)) return;
-          set.add(RuntimeGlobals.moduleCache);
-          set.add(RuntimeGlobals.moduleFactoriesAddOnly);
-        });
-      compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.hmrDownloadManifest).tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
-        if (!isEnabledForChunk(chunk)) return;
-        set.add(RuntimeGlobals.getUpdateManifestFilename);
       });
     });
   }

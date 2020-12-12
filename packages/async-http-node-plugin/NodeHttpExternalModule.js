@@ -47,6 +47,8 @@ const propertyAccess = require("webpack/lib/util/propertyAccess");
  * @returns {SourceData} the generated source
  */
 const getSource = (urlAndGlobal, runtimeTemplate) => {
+  console.log(urlAndGlobal);
+
   return `new Promise(${runtimeTemplate.basicFunction("resolve, reject", [
     `         var filename = "app2.js";`,
     `         var url = "http://localhost:8080/" + filename.replace(/^.\\//, "");`,
@@ -172,27 +174,7 @@ class NodeHttpExternalModule extends Module {
     this.buildMeta.exportsType = "dynamic";
     let canMangle = false;
     this.clearDependenciesAndBlocks();
-    switch (this.externalType) {
-      case "system":
-        if (!Array.isArray(this.request) || this.request.length === 1) {
-          this.buildMeta.exportsType = "namespace";
-          canMangle = true;
-        }
-        break;
-      case "promise":
-        this.buildMeta.async = true;
-        break;
-      case "import":
-        this.buildMeta.async = true;
-        if (!Array.isArray(this.request) || this.request.length === 1) {
-          this.buildMeta.exportsType = "namespace";
-          canMangle = false;
-        }
-        break;
-      case "script":
-        this.buildMeta.async = true;
-        break;
-    }
+    this.buildMeta.async = true;
     this.addDependency(new StaticExportsDependency(true, canMangle));
     callback();
   }
@@ -217,50 +199,10 @@ class NodeHttpExternalModule extends Module {
   getSourceData(runtimeTemplate, moduleGraph, chunkGraph) {
     let request = typeof this.request === "object" && !Array.isArray(this.request) ? this.request[this.externalType] : this.request;
 
-    // switch (this.externalType) {
-    //   case "this":
-    //   case "window":
-    //   case "self":
-    //     return getSourceForGlobalVariableExternal(request, this.externalType);
-    //   case "global":
-    //     return getSourceForGlobalVariableExternal(request, runtimeTemplate.outputOptions.globalObject);
-    //   case "commonjs":
-    //   case "commonjs-module":
-    //     return getSourceForCommonJsExternal(request);
-    //   case "amd":
-    //   case "amd-require":
-    //   case "umd":
-    //   case "umd2":
-    //   case "system":
-    //   case "jsonp":
-    //     return getSourceForAmdOrUmdExternal(chunkGraph.getModuleId(this), this.isOptional(moduleGraph), request, runtimeTemplate);
-    //   case "import":
-    //     return getSourceForImportExternal(request, runtimeTemplate);
-    //   case "script":
-    //     return getSourceForScriptExternal(request, runtimeTemplate);
-    //   case "module":
-    //     if (!runtimeTemplate.supportsEcmaScriptModuleSyntax()) {
-    //       throw new Error(
-    //         "The target environment doesn't support EcmaScriptModule syntax so it's not possible to use external type 'module'"
-    //       );
-    //     }
-    //     throw new Error("Module external type is not implemented yet");
-    //   case "var":
-    //   case "promise":
-    //   case "const":
-    //   case "let":
-    //   case "assign":
-    //   default:
-    //     return getSourceForDefaultCase(this.isOptional(moduleGraph), request, runtimeTemplate);
-    // }
-
     if (!Array.isArray(request)) {
       // make it an array as the look up works the same basically
       request = [request];
     }
-
-    let variableName = request[0];
-
     return {
       init: "var error = new Error();",
       expression: getSource(request, runtimeTemplate),
