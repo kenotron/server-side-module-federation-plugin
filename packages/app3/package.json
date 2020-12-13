@@ -1,11 +1,11 @@
 {
-  "name": "app2",
+  "name": "app3",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "start": "http-server -p 8080 dist"
+    "start": "http-server -p 8081 dist"
   },
   "devDependencies": {
     "async-http-node-plugin": "*",

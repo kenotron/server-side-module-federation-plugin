@@ -1,11 +1,5 @@
 const webpack = require("webpack");
-const NodeHttpChunkLoadingPlugin = require("../async-http-node-plugin/NodeHttpChunkLoadPlugin");
-
-const remotes = {
-  app2: "http://localhost:8080/app2.js",
-  app3: "http://localhost:8081/app3.js",
-};
-
+const NodeHttpChunkLoadingPlugin = require("async-http-node-plugin");
 module.exports = {
   optimization: { minimize: false },
   module: {
@@ -30,21 +24,21 @@ module.exports = {
       },
     ],
   },
-  entry: "./src/index.js",
   output: {
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
+    publicPath: "http://localhost:8081/",
   },
+  entry: {},
   target: "node",
   plugins: [
-    new NodeHttpChunkLoadingPlugin({
-      remotes,
-    }),
+    new NodeHttpChunkLoadingPlugin(),
     new webpack.container.ModuleFederationPlugin({
-      name: "app1",
+      name: "app3",
       library: { type: "commonjs-module" },
-      remotes,
+      exposes: {
+        "./shared": "./src/shared",
+      },
     }),
   ],
-  stats: { errorDetails: true },
 };

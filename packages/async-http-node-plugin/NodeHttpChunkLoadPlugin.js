@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
 const StartupChunkDependenciesPlugin = require("webpack/lib/runtime/StartupChunkDependenciesPlugin");
 const HttpChunkLoadingRuntimeModule = require("./HttpChunkLoadingRuntimeModule");
-const NodeLoadScriptRuntimeModule = require("./NodeHttpExternalModule");
+const HttpLoadRuntimeModule = require("./HttpLoadRuntimeModule");
 const NodeHttpExternalModule = require("./NodeHttpExternalModule");
 
 const { parseOptions } = require("webpack/lib/container/options");
@@ -93,6 +93,11 @@ class NodeHttpChunkLoadingPlugin {
           set.add(RuntimeGlobals.startupEntrypoint);
           set.add(RuntimeGlobals.externalInstallChunk);
         }
+      });
+
+      compilation.hooks.additionalTreeRuntimeRequirements.tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
+        const m = new HttpLoadRuntimeModule(set);
+        compilation.addRuntimeModule(chunk, m);
       });
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.ensureChunkHandlers).tap("NodeHttpChunkLoadingPlugin", handler);
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.baseURI).tap("NodeHttpChunkLoadingPlugin", handler);

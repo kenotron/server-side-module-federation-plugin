@@ -48,36 +48,7 @@ const path = require("path");
  * @returns {SourceData} the generated source
  */
 const getSource = (url, runtimeTemplate) => {
-  return `new Promise(${runtimeTemplate.basicFunction("resolve, reject", [
-    `var filename = "${path.basename(url)}";`,
-    `var url = "${url}"`,
-    `require("http").get(url, "utf-8", function (res) {`,
-    Template.indent([
-      `var statusCode = res.statusCode;`,
-      `res.setEncoding("utf8");`,
-      `let content = "";`,
-      `if (statusCode !== 200) {`,
-      Template.indent([`return reject(new Error("Request Failed. Status Code: " + statusCode));`]),
-      `}`,
-      `res.on("data", (c) => {`,
-      Template.indent([`content += c;`]),
-      `});`,
-      `res.on("end", () => {`,
-      Template.indent([
-        `if (statusCode === 200) {`,
-        Template.indent([
-          `let chunk = { exports: {} };`,
-          `require("vm").runInThisContext("(function(exports, require, module, __filename, __dirname){"+content+"}\\n)", filename)(`,
-          Template.indent([`chunk.exports,require,chunk,require("path").dirname(filename),filename`]),
-          `);`,
-          `resolve(chunk.exports);`,
-        ]),
-        `}`,
-      ]),
-      `});`,
-    ]),
-    `});`,
-  ])})`;
+  return `${RuntimeGlobals.require}.httpExternal("${url}")`;
 };
 
 /**
@@ -199,7 +170,6 @@ class NodeHttpExternalModule extends Module {
 
   getSourceData(runtimeTemplate, moduleGraph, chunkGraph) {
     return {
-      init: "var error = new Error();",
       expression: getSource(this.request, runtimeTemplate),
     };
   }

@@ -19,6 +19,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "lage": "lage"
+    "lage": "lage",
+    "start": "lage start"
   }
 }
