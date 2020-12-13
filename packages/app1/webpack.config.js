@@ -44,6 +44,7 @@ module.exports = {
       name: "app1",
       library: { type: "commonjs-module" },
       remotes,
+      shared: ["app2"],
     }),
   ],
   stats: { errorDetails: true },

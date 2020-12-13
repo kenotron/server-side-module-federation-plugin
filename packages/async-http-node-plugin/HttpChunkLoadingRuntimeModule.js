@@ -15,8 +15,6 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
   constructor(runtimeRequirements) {
     super("http chunk loading", 10);
     this.runtimeRequirements = runtimeRequirements;
-
-    this.baseUrl = "http://localhost:8080/";
   }
 
   /**
@@ -26,7 +24,6 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
     const { chunk } = this;
     const { chunkGraph, runtimeTemplate } = this.compilation;
     const fn = RuntimeGlobals.ensureChunkHandlers;
-    const withBaseURI = this.runtimeRequirements.has(RuntimeGlobals.baseURI);
     const withExternalInstallChunk = this.runtimeRequirements.has(RuntimeGlobals.externalInstallChunk);
     const withLoading = this.runtimeRequirements.has(RuntimeGlobals.ensureChunkHandlers);
     const hasJsMatcher = compileBooleanMatcher(chunkGraph.getChunkConditionMap(chunk, chunkHasJs));

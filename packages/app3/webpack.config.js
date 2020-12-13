@@ -1,5 +1,10 @@
 const webpack = require("webpack");
 const NodeHttpChunkLoadingPlugin = require("async-http-node-plugin");
+
+const remotes = {
+  app2: "http://localhost:8080/app2.js",
+};
+
 module.exports = {
   optimization: { minimize: false },
   module: {
@@ -32,13 +37,15 @@ module.exports = {
   entry: {},
   target: "node",
   plugins: [
-    new NodeHttpChunkLoadingPlugin(),
+    new NodeHttpChunkLoadingPlugin({ remotes }),
     new webpack.container.ModuleFederationPlugin({
       name: "app3",
       library: { type: "commonjs-module" },
       exposes: {
         "./shared": "./src/shared",
       },
+      remotes,
+      shared: ["app2"],
     }),
   ],
 };
