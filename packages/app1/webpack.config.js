@@ -30,20 +30,18 @@ module.exports = {
     ],
   },
   entry: "./src/index.js",
-  target: "node",
   output: {
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
   },
+  target: "node",
   plugins: [
     new NodeHttpChunkLoadingPlugin({
       remotes,
     }),
     new webpack.container.ModuleFederationPlugin({
       name: "app1",
-      library: {
-        type: "commonjs-module",
-      },
+      library: { type: "commonjs-module" },
       remotes,
     }),
   ],

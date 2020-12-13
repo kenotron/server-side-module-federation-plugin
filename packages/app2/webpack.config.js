@@ -25,7 +25,9 @@ module.exports = {
     ],
   },
   output: {
+    libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
+    publicPath: "http://localhost:8080/",
   },
   entry: {},
   target: "node",

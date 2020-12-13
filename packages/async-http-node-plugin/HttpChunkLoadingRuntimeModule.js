@@ -38,14 +38,6 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
     const rootOutputDir = getUndoPath(outputName, false);
 
     return Template.asString([
-      withBaseURI
-        ? Template.asString([
-            `${RuntimeGlobals.baseURI} = require("url").pathToFileURL(${
-              rootOutputDir ? `__dirname + ${JSON.stringify("/" + rootOutputDir)}` : "__filename"
-            });`,
-          ])
-        : "// no baseURI",
-      "",
       "// object to store loaded chunks",
       '// "0" means "already loaded", Promise means loading',
       "var installedChunks = {",
@@ -113,10 +105,11 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
                         ]),
                         "}).catch((e) => new Promise(function(resolve, reject) {",
                         Template.indent([
+                          `if (!${RuntimeGlobals.publicPath}) { reject(e); }`,
                           "installedChunkData[0] = resolve;",
                           "installedChunkData[1] = reject;",
                           `var filename = ${JSON.stringify(rootOutputDir)} + ${RuntimeGlobals.getChunkScriptFilename}(chunkId);`,
-                          `var url = "${this.baseUrl}" + filename.replace(/^\.\\//,"");`,
+                          `var url = ${RuntimeGlobals.publicPath} + filename.replace(/^\.\\//,"");`,
                           "require('http').get(url, 'utf-8', function(res) {",
                           Template.indent([
                             "var statusCode = res.statusCode;",

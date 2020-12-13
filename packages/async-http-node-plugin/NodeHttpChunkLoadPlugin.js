@@ -80,6 +80,7 @@ class NodeHttpChunkLoadingPlugin {
         if (!isEnabledForChunk(chunk)) return;
         set.add(RuntimeGlobals.moduleFactoriesAddOnly);
         set.add(RuntimeGlobals.hasOwnProperty);
+        set.add(RuntimeGlobals.publicPath);
 
         const m = new HttpChunkLoadingRuntimeModule(set);
 
