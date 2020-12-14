@@ -90,6 +90,6 @@ export default () => {
 git clone https://github.com/kenotron/server-side-module-federation-plugin.git
 cd server-side-module-federation-plugin
 yarn
-yarn build
+yarn start
 yarn workspace app1 test
 ```
