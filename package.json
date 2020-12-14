@@ -1,5 +1,5 @@
 {
-  "name": "ssr-mf",
+  "name": "server-side-module-federation-monorepo",
   "version": "1.0.0",
   "private": "true",
   "license": "MIT",
