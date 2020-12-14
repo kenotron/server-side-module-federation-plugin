@@ -107,7 +107,9 @@ class HttpChunkLoadingRuntimeModule extends RuntimeModule {
                           "installedChunkData[1] = reject;",
                           `var filename = ${JSON.stringify(rootOutputDir)} + ${RuntimeGlobals.getChunkScriptFilename}(chunkId);`,
                           `var url = ${RuntimeGlobals.publicPath} + filename.replace(/^\.\\//,"");`,
-                          "require('http').get(url, 'utf-8', function(res) {",
+                          `var protocol = require("url").parse(url).protocol.replace(':', '');`,
+                          `if (!protocol.startsWith("http")) { return reject() }`,
+                          `require(protocol).get(url, "utf-8", function (res) {`,
                           Template.indent([
                             "var statusCode = res.statusCode;",
                             `res.setEncoding('utf8');`,

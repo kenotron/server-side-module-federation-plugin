@@ -8,7 +8,7 @@
     "start": "http-server -p 8080 dist"
   },
   "devDependencies": {
-    "async-http-node-plugin": "*",
+    "server-side-module-federation-plugin": "*",
     "http-server": "^0.12.3"
   }
 }

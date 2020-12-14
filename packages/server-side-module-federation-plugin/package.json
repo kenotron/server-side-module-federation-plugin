@@ -1,0 +1,14 @@
+{
+  "name": "server-side-module-federation-plugin",
+  "version": "1.0.0",
+  "main": "ServerSideModuleFederationPlugin.js",
+  "author": "ken@gizzar.com",
+  "description": "ModuleFederationPlugin, but for the server over http",
+  "license": "MIT",
+  "peerDependencies": {
+    "webpack": ">5.9.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.10.0"
+  }
+}

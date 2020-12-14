@@ -11,10 +11,7 @@ const Module = require("webpack/lib/Module");
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
 const Template = require("webpack/lib/Template");
 const StaticExportsDependency = require("webpack/lib/dependencies/StaticExportsDependency");
-const extractUrlAndGlobal = require("webpack/lib/util/extractUrlAndGlobal");
 const makeSerializable = require("webpack/lib/util/makeSerializable");
-const propertyAccess = require("webpack/lib/util/propertyAccess");
-const path = require("path");
 
 /** @typedef {import("webpack-sources").Source} Source */
 /** @typedef {import("../declarations/WebpackOptions").WebpackOptionsNormalized} WebpackOptions */
@@ -148,6 +145,7 @@ class NodeHttpExternalModule extends Module {
     this.clearDependenciesAndBlocks();
     this.buildMeta.async = true;
     this.addDependency(new StaticExportsDependency(true, canMangle));
+
     callback();
   }
 

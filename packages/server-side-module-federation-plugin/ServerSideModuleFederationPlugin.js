@@ -11,7 +11,7 @@ const { parseOptions } = require("webpack/lib/container/options");
 
 /** @typedef {import("../Compiler")} Compiler */
 
-class NodeHttpChunkLoadingPlugin {
+class ServerSideModuleFederationPlugin {
   constructor(options) {
     options = options || {};
     this._asyncChunkLoading = options.asyncChunkLoading;
@@ -26,6 +26,7 @@ class NodeHttpChunkLoadingPlugin {
         shareScope: item.shareScope || options.shareScope || "default",
       })
     );
+    this._options = options;
   }
 
   /**
@@ -46,6 +47,8 @@ class NodeHttpChunkLoadingPlugin {
         i++;
       }
     }
+
+    new webpack.container.ModuleFederationPlugin(this._options).apply(compiler);
 
     compiler.hooks.compile.tap("NodeHttpChunkLoadingPlugin", ({ normalModuleFactory }) => {
       normalModuleFactory.hooks.factorize.tapAsync("NodeHttpChunkLoadingPlugin", (data, callback) => {
@@ -99,6 +102,11 @@ class NodeHttpChunkLoadingPlugin {
         const m = new HttpLoadRuntimeModule(set);
         compilation.addRuntimeModule(chunk, m);
       });
+
+      compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.loadScript).tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
+        const m = new HttpLoadScriptRuntimeModule(set);
+        compilation.addRuntimeModule(chunk, m);
+      });
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.ensureChunkHandlers).tap("NodeHttpChunkLoadingPlugin", handler);
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.baseURI).tap("NodeHttpChunkLoadingPlugin", handler);
       compilation.hooks.runtimeRequirementInTree.for(RuntimeGlobals.ensureChunkHandlers).tap("NodeHttpChunkLoadingPlugin", (chunk, set) => {
@@ -109,4 +117,4 @@ class NodeHttpChunkLoadingPlugin {
   }
 }
 
-module.exports = NodeHttpChunkLoadingPlugin;
+module.exports = ServerSideModuleFederationPlugin;

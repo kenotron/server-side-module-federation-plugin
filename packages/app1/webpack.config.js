@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const NodeHttpChunkLoadingPlugin = require("../async-http-node-plugin/NodeHttpChunkLoadPlugin");
+const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
 
 const remotes = {
   app2: "http://localhost:8080/app2.js",
@@ -37,10 +37,7 @@ module.exports = {
   },
   target: "node",
   plugins: [
-    new NodeHttpChunkLoadingPlugin({
-      remotes,
-    }),
-    new webpack.container.ModuleFederationPlugin({
+    new ServerSideModuleFederationPlugin({
       name: "app1",
       library: { type: "commonjs-module" },
       remotes,

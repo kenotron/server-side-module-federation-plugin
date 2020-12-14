@@ -8,6 +8,7 @@
     "start": "webpack -w"
   },
   "dependencies": {
+    "server-side-module-federation-plugin": "*",
     "axios": "^0.21.0"
   }
 }

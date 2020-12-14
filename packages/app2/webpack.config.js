@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const NodeHttpChunkLoadingPlugin = require("async-http-node-plugin");
+const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
 module.exports = {
   optimization: { minimize: false },
   module: {
@@ -32,8 +32,7 @@ module.exports = {
   entry: {},
   target: "node",
   plugins: [
-    new NodeHttpChunkLoadingPlugin(),
-    new webpack.container.ModuleFederationPlugin({
+    new ServerSideModuleFederationPlugin({
       name: "app2",
       library: { type: "commonjs-module" },
       exposes: {

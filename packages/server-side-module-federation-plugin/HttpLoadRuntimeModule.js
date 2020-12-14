@@ -31,7 +31,9 @@ class HttpLoadRuntimeModule extends RuntimeModule {
         [
           `return new Promise(${runtimeTemplate.basicFunction("resolve, reject", [
             `var filename = require("path").basename(url);`,
-            `require("http").get(url, "utf-8", function (res) {`,
+            `var protocol = require("url").parse(url).protocol.replace(':', '');`,
+            `if (!protocol.startsWith("http")) { return reject() }`,
+            `require(protocol).get(url, "utf-8", function (res) {`,
             Template.indent([
               `var statusCode = res.statusCode;`,
               `res.setEncoding("utf8");`,
