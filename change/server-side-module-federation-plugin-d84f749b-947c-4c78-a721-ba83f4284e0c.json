@@ -1,7 +1,0 @@
-{
-  "type": "patch",
-  "comment": "adding a readme",
-  "packageName": "server-side-module-federation-plugin",
-  "email": "ken@gizzar.com",
-  "dependentChangeType": "patch"
-}

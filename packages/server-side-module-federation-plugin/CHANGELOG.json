@@ -2,6 +2,21 @@
   "name": "server-side-module-federation-plugin",
   "entries": [
     {
+      "date": "Mon, 14 Dec 2020 02:16:48 GMT",
+      "tag": "server-side-module-federation-plugin_v1.0.2",
+      "version": "1.0.2",
+      "comments": {
+        "patch": [
+          {
+            "comment": "adding a readme",
+            "author": "ken@gizzar.com",
+            "commit": "4b3e7f88e9ad80a3f0848b558a9d1f69e3fd51ce",
+            "package": "server-side-module-federation-plugin"
+          }
+        ]
+      }
+    },
+    {
       "date": "Mon, 14 Dec 2020 02:14:11 GMT",
       "tag": "server-side-module-federation-plugin_v1.0.1",
       "version": "1.0.1",
