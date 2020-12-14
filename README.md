@@ -19,6 +19,7 @@ module.exports = {
   output: {
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
+    publicPath: 'http://some.cdn1.com/server/this-package/'
   },
   target: 'node',
   plugins: [
