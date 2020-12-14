@@ -13,9 +13,9 @@
     "build": "lage build",
     "lage": "lage",
     "start": "lage start",
-    "release": "beachball publish -y",
-    "checkchange": "beachball check",
-    "change": "beachball change"
+    "release": "beachball publish -y -b origin/main",
+    "checkchange": "beachball check -b origin/main",
+    "change": "beachball change -b origin/main"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
