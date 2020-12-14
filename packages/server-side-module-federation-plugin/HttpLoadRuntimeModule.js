@@ -1,15 +1,8 @@
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-*/
-
 "use strict";
 
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
 const RuntimeModule = require("webpack/lib/RuntimeModule");
 const Template = require("webpack/lib/Template");
-const { chunkHasJs, getChunkFilenameTemplate } = require("webpack/lib/javascript/JavascriptModulesPlugin");
-const compileBooleanMatcher = require("webpack/lib/util/compileBooleanMatcher");
-const { getUndoPath } = require("webpack/lib/util/identifier");
 const path = require("path");
 
 class HttpLoadRuntimeModule extends RuntimeModule {

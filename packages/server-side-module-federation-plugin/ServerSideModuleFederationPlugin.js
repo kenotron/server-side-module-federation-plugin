@@ -9,7 +9,7 @@ const NodeHttpExternalModule = require("./NodeHttpExternalModule");
 
 const { parseOptions } = require("webpack/lib/container/options");
 
-/** @typedef {import("../Compiler")} Compiler */
+/** @typedef {import("webpack/lib/Compiler")} Compiler */
 
 class ServerSideModuleFederationPlugin {
   constructor(options) {
