@@ -12,7 +12,8 @@
   "scripts": {
     "build": "lage build",
     "lage": "lage",
-    "start": "lage start"
+    "start": "lage start",
+    "release": "beachball publish -y"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

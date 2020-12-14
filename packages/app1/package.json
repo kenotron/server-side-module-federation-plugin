@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "webpack -w"
+    "start": "webpack -w",
+    "test": "node test.js"
   },
   "dependencies": {
     "server-side-module-federation-plugin": "*",

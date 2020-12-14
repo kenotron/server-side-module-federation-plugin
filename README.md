@@ -83,3 +83,13 @@ export default () => {
 ```
 
 5. You can use `App.js` inside a client bootstrapped code OR server bootstrapped code!
+
+## Trying out this repo
+
+```
+git clone https://github.com/kenotron/server-side-module-federation-plugin.git
+cd server-side-module-federation-plugin
+yarn
+yarn build
+yarn workspace app1 test
+```
