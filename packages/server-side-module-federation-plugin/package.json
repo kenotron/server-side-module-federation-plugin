@@ -1,6 +1,6 @@
 {
   "name": "server-side-module-federation-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "ServerSideModuleFederationPlugin.js",
   "author": "ken@gizzar.com",
   "description": "ModuleFederationPlugin, but for the server over http",
