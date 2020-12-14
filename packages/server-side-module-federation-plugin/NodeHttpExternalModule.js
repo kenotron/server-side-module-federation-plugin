@@ -4,7 +4,6 @@ const { OriginalSource, RawSource } = require("webpack-sources");
 const ConcatenationScope = require("webpack/lib/ConcatenationScope");
 const Module = require("webpack/lib/Module");
 const RuntimeGlobals = require("webpack/lib/RuntimeGlobals");
-const Template = require("webpack/lib/Template");
 const StaticExportsDependency = require("webpack/lib/dependencies/StaticExportsDependency");
 const makeSerializable = require("webpack/lib/util/makeSerializable");
 
@@ -41,16 +40,6 @@ const makeSerializable = require("webpack/lib/util/makeSerializable");
  */
 const getSource = (url, runtimeTemplate) => {
   return `${RuntimeGlobals.require}.httpExternal("${url}")`;
-};
-
-/**
- * @param {string} variableName the variable name to check
- * @param {string} request the request path
- * @param {RuntimeTemplate} runtimeTemplate the runtime template
- * @returns {string} the generated source
- */
-const checkExternalVariable = (variableName, request, runtimeTemplate) => {
-  return `if(typeof ${variableName} === 'undefined') { ${runtimeTemplate.throwMissingModuleErrorBlock({ request })} }\n`;
 };
 
 const TYPES = new Set(["javascript"]);
