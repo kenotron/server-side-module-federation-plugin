@@ -1,26 +1,27 @@
 {
   "name": "ssr-mf",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
   "private": "true",
+  "license": "MIT",
+  "main": "index.js",
   "workspaces": {
     "packages": [
       "packages/*"
     ]
   },
+  "scripts": {
+    "build": "lage build",
+    "lage": "lage",
+    "start": "lage start"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.10",
     "babel-loader": "^8.2.2",
+    "beachball": "^1.47.1",
     "lage": "0.26.2",
     "webpack": "^5.10.0",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
-  },
-  "scripts": {
-    "lage": "lage",
-    "build": "lage build",
-    "start": "lage start"
   }
 }
