@@ -5,6 +5,9 @@
   "author": "ken@gizzar.com",
   "description": "ModuleFederationPlugin, but for the server over http",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/kenotron/server-side-module-federation-plugin"
+  },
   "peerDependencies": {
     "webpack": ">5.9.0"
   },
