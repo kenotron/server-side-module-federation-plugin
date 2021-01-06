@@ -1,11 +1,12 @@
 const webpack = require("webpack");
+const path = require("path");
 const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
 
 const remotes = {
   app2: "http://localhost:8080/app2.js",
 };
 
-module.exports = {
+const serverConfig = {
   optimization: { minimize: false },
   module: {
     rules: [
@@ -30,6 +31,7 @@ module.exports = {
     ],
   },
   output: {
+    path: path.join(__dirname, "dist/server"),
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
     publicPath: "http://localhost:8081/",
@@ -51,3 +53,39 @@ module.exports = {
     errorDetails: true,
   },
 };
+
+const clientConfig = {
+  optimization: { minimize: false },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env"]],
+          },
+        },
+      },
+    ],
+  },
+  entry: {},
+  plugins: [
+    new webpack.container.ModuleFederationPlugin({
+      name: "app3",
+      exposes: {
+        "./shared": "./src/shared",
+      },
+      remotes,
+      shared: ["app2"],
+    }),
+  ],
+  output: {
+    path: path.join(__dirname, "dist/client"),
+  },
+  stats: {
+    errorDetails: true,
+  },
+};
+
+module.exports = [clientConfig, serverConfig];
