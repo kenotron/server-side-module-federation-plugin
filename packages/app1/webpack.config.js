@@ -2,10 +2,10 @@ const webpack = require("webpack");
 const path = require("path");
 const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
 
-const remotes = {
-  app2: "http://localhost:8080/app2.js",
-  app3: "http://localhost:8081/app3.js",
-};
+const remotes = (remoteType) => ({
+  app2: `${remoteType === "client" ? "app2@" : ""}http://localhost:8080/${remoteType}/app2.js`,
+  app3: `${remoteType === "client" ? "app3@" : ""}http://localhost:8081/${remoteType}/app3.js`,
+});
 
 const serverConfig = {
   optimization: { minimize: false },
@@ -42,7 +42,7 @@ const serverConfig = {
     new ServerSideModuleFederationPlugin({
       name: "app1",
       library: { type: "commonjs-module" },
-      remotes,
+      remotes: remotes("server"),
       shared: ["app2"],
     }),
   ],
@@ -72,7 +72,7 @@ const clientConfig = {
   plugins: [
     new webpack.container.ModuleFederationPlugin({
       name: "app1",
-      remotes,
+      remotes: remotes("client"),
       shared: ["app2"],
     }),
   ],

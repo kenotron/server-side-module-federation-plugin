@@ -12,7 +12,7 @@
   "scripts": {
     "build": "lage build",
     "lage": "lage",
-    "start": "lage start",
+    "start": "lage start --verbose",
     "release": "beachball publish -y -b origin/main",
     "checkchange": "beachball check -b origin/main",
     "change": "beachball change -b origin/main"

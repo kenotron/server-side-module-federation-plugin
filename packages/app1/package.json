@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "webpack -w",
+    "start:webpack": "webpack -w",
+    "start:server": "node src/server.js",
+    "start": "concurrently \"npm:start:webpack\" \"npm:start:server\"",
     "test": "node test.js"
   },
   "dependencies": {
@@ -14,6 +16,7 @@
     "axios": "^0.21.0",
     "express": "^4.17.1",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "concurrently": "^5.3.0"
   }
 }
