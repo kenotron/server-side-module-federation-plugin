@@ -7,11 +7,12 @@
   "scripts": {
     "build": "webpack",
     "start:webpack": "webpack -w",
-    "start:server": "node src/server.js",
+    "start:server": "nodemon src/server.cjs",
     "start": "concurrently \"npm:start:webpack\" \"npm:start:server\"",
     "test": "node test.js"
   },
   "dependencies": {
+    "nodemon": "^2.0.7",
     "server-side-module-federation-plugin": "*",
     "axios": "^0.21.0",
     "express": "^4.17.1",

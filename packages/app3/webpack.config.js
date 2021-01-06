@@ -7,6 +7,12 @@ const remotes = (remoteType) => ({
   app3: `${remoteType === "client" ? "app3@" : ""}http://localhost:8081/${remoteType}/app3.js`,
 });
 
+const exposes = {
+  "./Shared": "./src/Shared",
+};
+
+const shared = { react: { singleton: true }, "react-dom": { singleton: true } };
+
 const serverConfig = {
   optimization: { minimize: false },
   module: {
@@ -25,6 +31,7 @@ const serverConfig = {
                   },
                 },
               ],
+              "@babel/preset-react",
             ],
           },
         },
@@ -35,7 +42,7 @@ const serverConfig = {
     path: path.join(__dirname, "dist/server"),
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
-    publicPath: "http://localhost:8081/server",
+    publicPath: "http://localhost:8081/server/",
   },
   entry: {},
   target: "node",
@@ -43,15 +50,16 @@ const serverConfig = {
     new ServerSideModuleFederationPlugin({
       name: "app3",
       library: { type: "commonjs-module" },
-      exposes: {
-        "./shared": "./src/shared",
-      },
+      exposes,
       remotes: remotes("server"),
-      shared: ["app2"],
+      shared,
     }),
   ],
   stats: {
     errorDetails: true,
+  },
+  devServer: {
+    writeToDisk: true,
   },
 };
 
@@ -64,7 +72,7 @@ const clientConfig = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: [["@babel/preset-env"]],
+            presets: [["@babel/preset-env"], "@babel/preset-react"],
           },
         },
       },
@@ -74,11 +82,9 @@ const clientConfig = {
   plugins: [
     new webpack.container.ModuleFederationPlugin({
       name: "app3",
-      exposes: {
-        "./shared": "./src/shared",
-      },
+      exposes,
       remotes: remotes("client"),
-      shared: ["app2"],
+      shared,
     }),
   ],
   output: {

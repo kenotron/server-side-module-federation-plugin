@@ -2,6 +2,12 @@ const webpack = require("webpack");
 const path = require("path");
 const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
 
+const exposes = {
+  "./Shared": "./src/Shared",
+};
+
+const shared = { react: { singleton: true }, "react-dom": { singleton: true } };
+
 const serverConfig = {
   optimization: { minimize: false },
   module: {
@@ -20,6 +26,7 @@ const serverConfig = {
                   },
                 },
               ],
+              "@babel/preset-react",
             ],
           },
         },
@@ -30,7 +37,7 @@ const serverConfig = {
     path: path.join(__dirname, "dist/server"),
     libraryTarget: "commonjs-module",
     chunkLoading: "async-http-node",
-    publicPath: "http://localhost:8080/",
+    publicPath: "http://localhost:8080/server/",
   },
   entry: {},
   target: "node",
@@ -38,11 +45,13 @@ const serverConfig = {
     new ServerSideModuleFederationPlugin({
       name: "app2",
       library: { type: "commonjs-module" },
-      exposes: {
-        "./shared": "./src/shared",
-      },
+      exposes,
+      shared,
     }),
   ],
+  devServer: {
+    writeToDisk: true,
+  },
 };
 
 const clientConfig = {
@@ -54,7 +63,7 @@ const clientConfig = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: [["@babel/preset-env"]],
+            presets: [["@babel/preset-env"], "@babel/preset-react"],
           },
         },
       },
@@ -68,9 +77,7 @@ const clientConfig = {
   plugins: [
     new webpack.container.ModuleFederationPlugin({
       name: "app2",
-      exposes: {
-        "./shared": "./src/shared",
-      },
+      exposes,
     }),
   ],
 };
