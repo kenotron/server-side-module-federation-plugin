@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const ServerSideModuleFederationPlugin = require("server-side-module-federation-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const remotes = (remoteType) => ({
   app2: `${remoteType === "client" ? "app2@" : ""}http://localhost:8080/${remoteType}/app2.js`,
@@ -82,6 +83,9 @@ const clientConfig = {
       name: "app1",
       remotes: remotes("client"),
       shared,
+    }),
+    new HtmlWebpackPlugin({
+      template: "index.ejs",
     }),
   ],
   stats: { errorDetails: true },

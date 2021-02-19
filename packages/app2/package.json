@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "http-server -p 8080 dist"
+    "start": "webpack serve"
   },
   "devDependencies": {
     "server-side-module-federation-plugin": "*",

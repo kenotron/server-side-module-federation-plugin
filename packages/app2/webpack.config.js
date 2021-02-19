@@ -51,6 +51,8 @@ const serverConfig = {
   ],
   devServer: {
     writeToDisk: true,
+    port: 8080,
+    contentBase: "dist",
   },
 };
 
