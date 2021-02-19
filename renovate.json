@@ -8,9 +8,10 @@
   "includeForks": true,
   "repositories": ["kenotron/server-side-module-federation-plugin"],
   "postUpgradeTasks": {
-    "commands": ["yarn change --type \"patch\" --message \"Renovate bump dependency version\""],
-    "fileFilters": ["change/*.json"]
+    "commands": ["yarn change --type \"patch\" --message \"Renovate bump dependency version\""]
   },
+  "trustLevel": "high",
+  "allowedPostUpgradeCommands": ["^yarn change"],
   "packageRules": [
     {
       "description": "lockFileMaintenance",

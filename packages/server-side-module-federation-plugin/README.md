@@ -10,7 +10,13 @@ This plugin for Webpack will allow for servers to federation portions of the cod
 yarn add -D server-side-module-federation-plugin
 ```
 
-2. Apply the plugin inside your webpack config for the SERVER, being sure to add some server side appropriate options
+or
+
+```
+npm install -D server-side-module-federation-plugin
+```
+
+2. Apply the plugin inside your Webpack config for the SERVER, being sure to add some server side appropriate options
 
 ```js
 const ServerSideModuleFederationPlugin = require('server-side-module-federation-plugin');
