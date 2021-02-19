@@ -19,5 +19,6 @@
       "masterIssueApproval": false,
       "stabilityDays": 0
     }
-  ]
+  ],
+  "extends": [":npm"]
 }
