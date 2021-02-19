@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
+      - run: yarn
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@v21.30.0
         with:
