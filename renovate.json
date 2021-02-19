@@ -16,7 +16,7 @@
     "fileFilters": ["change/*.json"]
   },
   "trustLevel": "high",
-  "allowedPostUpgradeCommands": ["^git add .", "^npx beachball"],
+  "allowedPostUpgradeCommands": ["^git add .", "^npx beachball", "^git reset"],
   "packageRules": [
     {
       "description": "lockFileMaintenance",
