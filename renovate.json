@@ -2,7 +2,7 @@
   "branchPrefix": "renovate/",
   "dryRun": false,
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-  "logLevel": "info",
+  "logLevel": "debug",
   "onboarding": true,
   "platform": "github",
   "includeForks": true,
