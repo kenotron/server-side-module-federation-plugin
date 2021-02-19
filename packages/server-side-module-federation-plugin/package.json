@@ -12,6 +12,7 @@
     "webpack": ">5.9.0"
   },
   "devDependencies": {
-    "webpack": "^5.10.0"
+    "webpack": "^5.10.0",
+    "lage": "0.26.0"
   }
 }
