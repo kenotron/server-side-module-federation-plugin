@@ -10,9 +10,10 @@
   "postUpgradeTasks": {
     "commands": [
       "git add .",
-      "npx beachball change --branch origin/main --type \"patch\" --message \"Renovate bump dependency version\" --no-commit"
+      "npx beachball change --branch origin/main --type \"patch\" --message \"Renovate bump dependency version\" --no-commit",
+      "git reset change/*.json"
     ],
-    "fileFilters": ["**/*.json"]
+    "fileFilters": ["change/*.json"]
   },
   "trustLevel": "high",
   "allowedPostUpgradeCommands": ["^git add .", "^npx beachball"],
