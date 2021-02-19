@@ -1,12 +1,16 @@
 {
-  "branchPrefix": "test-renovate/",
-  "dryRun": true,
+  "branchPrefix": "renovate/",
+  "dryRun": false,
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-  "logLevel": "debug",
-  "onboarding": false,
+  "logLevel": "warn",
+  "onboarding": true,
   "platform": "github",
   "includeForks": true,
-  "repositories": ["renovatebot/github-action", "renovate-tests/cocoapods1", "renovate-tests/gomod1"],
+  "repositories": ["kenotron/server-side-module-federation-plugin"],
+  "postUpgradeTasks": {
+    "commands": ["yarn change --type \"patch\" --message \"Renovate bump dependency version\""],
+    "fileFilters": ["change/*.json"]
+  },
   "packageRules": [
     {
       "description": "lockFileMaintenance",
